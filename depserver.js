@@ -76,7 +76,7 @@ app.post('/ol', (req, res) => {
       console.log('post time' + postTimeInMinutes);
 
       const routeOrder = postOptResponse.json.routes[0].waypoint_order;
-      const output = routeOrder.map(i => reqList[I].replaceAll(' ', '+'));
+      const output = routeOrder.map(i => reqList[i].replaceAll(' ', '+'));
       origin = origin.replaceAll(' ', '+');
       destination = destination.replaceAll(' ', '+');
       output.unshift(origin);
