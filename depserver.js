@@ -58,7 +58,7 @@ app.post('/ol', async (req, res) => {
   origin = await getBestMatchAddress(origin.replaceAll('+', ' '));
   destination = await getBestMatchAddress(destination.replaceAll('+', ' '));
   var waypts = [];
-  for (let i = 0; i <List.length; i++) {
+  for (let i = 0; i < reqList.length; i++) {
     let element = reqList[i].replaceAll('+', ' ');
     waypts.push(await getBestMatchAddress(element));
   }
