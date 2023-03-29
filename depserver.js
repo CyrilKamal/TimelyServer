@@ -8,7 +8,18 @@ const googleMapsClient = require('@google/maps').createClient({
   Promise: Promise
 });
 
-
+async function getBestMatchAddress(address) {
+  try {
+    const response = await googleMapsClient.places({ query: address, region: '.ca' }).asPromise();
+    if (response.json.results.length > 0) {
+      return response.json.results[0].formatted_address;
+    }
+    return address;
+  } catch (err) {
+    console.log(err);
+    return address;
+  }
+}
 
 const app = express()
 // adding Helmet to enhance your Rest API's security
@@ -33,7 +44,7 @@ app.get('/', (req, res) => {
 });
 
 // defining an endpoint to return all ads
-app.post('/ol', (req, res) => {
+app.post('/ol', async (req, res) => {
   let reqList = req.body.splitAddressList;
   //console.log(reqList)
   let origin = reqList[0];
@@ -42,13 +53,14 @@ app.post('/ol', (req, res) => {
   reqList.shift()
   reqList.pop()
   console.log(reqList)
-  origin = origin.replaceAll('+', ' ');
-  destination = destination.replaceAll('+', ' ');
+  //origin = origin.replaceAll('+', ' ');
+  //destination = destination.replaceAll('+', ' ');
+  origin = await getBestMatchAddress(origin.replaceAll('+', ' '));
+  destination = await getBestMatchAddress(destination.replaceAll('+', ' '));
   var waypts = [];
-  for (let i = 0; i < reqList.length; i++) {
+  for (let i = 0; i <List.length; i++) {
     let element = reqList[i].replaceAll('+', ' ');
-    //element = '"' + element + '"'
-    waypts.push(element);
+    waypts.push(await getBestMatchAddress(element));
   }
 
 
