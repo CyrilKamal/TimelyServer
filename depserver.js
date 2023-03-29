@@ -10,7 +10,7 @@ const googleMapsClient = require('@google/maps').createClient({
 
 async function getBestMatchAddress(address) {
   try {
-    const response = await googleMapsClient.places({ query: address, region: '.ca' }).asPromise();
+    const response = await googleMapsClient.geocode({ address: address, region: '.ca' }).asPromise();
     if (response.json.results.length > 0) {
       return response.json.results[0].formatted_address;
     }
