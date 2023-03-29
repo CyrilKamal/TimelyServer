@@ -42,18 +42,12 @@ app.post('/ol', (req, res) => {
   reqList.shift()
   reqList.pop()
   console.log(reqList)
-  if (reqList.includes('+')){
-    origin = origin.replaceAll('+', ' ');
-    destination = destination.replaceAll('+', ' ');
-  }
+  origin = origin.replace(/\+/g, ' ');
+  destination = destination.replace(/\+/g, ' ');
   var waypts = [];
   for (let i = 0; i < reqList.length; i++) {
-    if (reqList[i].includes('+')) {
-      let element = reqList[i].replaceAll('+', ' ');
-      waypts.push(element);
-    } else {
-      waypts.push(reqList[i]);
-    }
+    let element = reqList[i].replace(/\+/g, ' ');
+    waypts.push(element);
   }
 
 
