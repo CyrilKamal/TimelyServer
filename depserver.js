@@ -94,6 +94,9 @@ app.post('/ol', (req, res) => {
     .catch((err) => {
       if (err.json && err.json.status) {
         console.log(err.json.status);
+        if (err.json.status === 'NOT_FOUND') {
+          res.send({ link: '', timeDifference: '' });
+        }
       } else {
         console.log('Error:', err);
       }
