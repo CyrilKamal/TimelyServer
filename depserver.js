@@ -89,6 +89,7 @@ app.post('/ol', (req, res) => {
       const hours = Math.floor(diff / 60);
       const minutes = Math.round(diff % 60);
       const formattedTime = `${hours} hr ${minutes} min`;
+      console.log("url " + urlstr)
       res.send({ link: urlstr, timeDifference: formattedTime });
     })
     .catch((err) => {
