@@ -76,10 +76,11 @@ app.post('/ol', (req, res) => {
       console.log('post time' + postTimeInMinutes);
 
       const routeOrder = postOptResponse.json.routes[0].waypoint_order;
-      const output = routeOrder.map(i => reqList[i]);
+      const output = routeOrder.map(i => reqList[I].replaceAll(' ', '+'));
       origin = origin.replaceAll(' ', '+');
       destination = destination.replaceAll(' ', '+');
       output.unshift(origin);
+      output.push(destination);
       output.push(destination);
       let urlstr = output.join('_');
       urlstr = urlstr.replaceAll('_', '/');
