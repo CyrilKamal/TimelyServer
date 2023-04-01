@@ -81,7 +81,6 @@ app.post('/ol', (req, res) => {
       destination = destination.replaceAll(' ', '+');
       output.unshift(origin);
       output.push(destination);
-      output.push(destination);
       let urlstr = output.join('_');
       urlstr = urlstr.replaceAll('_', '/');
       urlstr = "https://www.google.com/maps/dir/" + urlstr;
