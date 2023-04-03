@@ -11,7 +11,7 @@ const googleMapsClient = require('@google/maps').createClient({
 
 
 const app = express()
-// adding Helmet to enhance your Rest API's security
+// adding Helmet to enhance API's security
 app.use(helmet());
 
 // using bodyParser to parse JSON bodies into JS objects
@@ -27,12 +27,12 @@ app.use(bodyParser.json())
 
 
 
-// defining an endpoint to return all ads
+// defining default endpoint
 app.get('/', (req, res) => {
   res.send('default get route');
 });
 
-// defining an endpoint to return all ads
+// defining an endpoint to return optimized links
 app.post('/ol', (req, res) => {
   let reqList = req.body.splitAddressList;
   //console.log(reqList)
@@ -165,12 +165,13 @@ app.post('/ol', (req, res) => {
 
 });
 
-
+//localhost testing block (uncomment if doing local testing)
 // // starting the server
 // app.listen(3001, () => {
 //   console.log('listening on port 3001');
 // });
 
+//prod listen statement
 app.listen(process.env.PORT, () => {
   console.log('listening on port ' + process.env.PORT);
 });
