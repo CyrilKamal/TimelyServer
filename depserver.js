@@ -59,48 +59,50 @@ app.post('/ol', (req, res) => {
   let preTimeInMinutes = 0;
 
   googleMapsClient.directions({ origin: origin, destination: destination, waypoints: waypts, mode: "driving" })
-    .asPromise()
-    .then((preOptResponse) => {
-      const preOptRoute = preOptResponse.json.routes[0];
-      const preTimeInSeconds = preOptRoute.legs.reduce((acc, leg) => acc + leg.duration.value, 0);
-      preTimeInMinutes = preTimeInSeconds / 60;
-      console.log('pretime:' + preTimeInMinutes);
+  .asPromise()
+  .then((preOptResponse) => {
+    const preOptRoute = preOptResponse.json.routes[0];
+    const preTimeInSeconds = preOptRoute.legs.reduce((acc, leg) => acc + leg.duration.value, 0);
+    const preDistanceInMeters = preOptRoute.legs.reduce((acc, leg) => acc + leg.distance.value, 0);
+    const preTimeInMinutes = preTimeInSeconds / 60;
+    console.log('pretime:' + preTimeInMinutes);
 
-      return googleMapsClient.directions({ origin: origin, destination: destination, waypoints: waypts, optimize: true, mode: "driving" })
-        .asPromise();
-    })
-    .then((postOptResponse) => {
-      const postOptRoute = postOptResponse.json.routes[0];
-      const postTimeInSeconds = postOptRoute.legs.reduce((acc, leg) => acc + leg.duration.value, 0);
-      const postTimeInMinutes = postTimeInSeconds / 60;
-      console.log('post time' + postTimeInMinutes);
+    return googleMapsClient.directions({ origin: origin, destination: destination, waypoints: waypts, optimize: true, mode: "driving" })
+      .asPromise()
+      .then((postOptResponse) => {
+        const postOptRoute = postOptResponse.json.routes[0];
+        const postTimeInSeconds = postOptRoute.legs.reduce((acc, leg) => acc + leg.duration.value, 0);
+        const postDistanceInMeters = postOptRoute.legs.reduce((acc, leg) => acc + leg.distance.value, 0);
+        const postTimeInMinutes = postTimeInSeconds / 60;
+        console.log('post time' + postTimeInMinutes);
 
-      const routeOrder = postOptResponse.json.routes[0].waypoint_order;
-      const output = routeOrder.map(i => reqList[i].replaceAll(' ', '+'));
-      origin = origin.replaceAll(' ', '+');
-      destination = destination.replaceAll(' ', '+');
-      output.unshift(origin);
-      output.push(destination);
-      let urlstr = output.join('_');
-      urlstr = urlstr.replaceAll('_', '/');
-      urlstr = "https://www.google.com/maps/dir/" + urlstr;
-      let diff = preTimeInMinutes - postTimeInMinutes;
-      const hours = Math.floor(diff / 60);
-      const minutes = Math.round(diff % 60);
-      const formattedTime = `${hours} hr ${minutes} min`;
-      console.log("url " + urlstr)
-      res.send({ link: urlstr, timeDifference: formattedTime });
-    })
-    .catch((err) => {
-      if (err.json && err.json.status) {
-        console.log(err.json.status);
-        if (err.json.status === 'NOT_FOUND') {
-          res.send({ link: '', timeDifference: '' });
-        }
-      } else {
-        console.log('Error:', err);
+        const routeOrder = postOptResponse.json.routes[0].waypoint_order;
+        const output = routeOrder.map(i => reqList[i].replaceAll(' ', '+'));
+        origin = origin.replaceAll(' ', '+');
+        destination = destination.replaceAll(' ', '+');
+        output.unshift(origin);
+        output.push(destination);
+        let urlstr = output.join('_');
+        urlstr = urlstr.replaceAll('_', '/');
+        urlstr = "https://www.google.com/maps/dir/" + urlstr;
+        const diffTimeInMinutes = preTimeInMinutes - postTimeInMinutes;
+        const diffDistanceInMeters = preDistanceInMeters - postDistanceInMeters;
+        const diffDistanceInKm = diffDistanceInMeters / 1000;
+        const formattedTime = `${Math.floor(diffTimeInMinutes / 60)} hr ${Math.round(diffTimeInMinutes % 60)} min`;
+        console.log("url " + urlstr)
+        res.send({ link: urlstr, timeDifference: formattedTime, distanceSaved: `${diffDistanceInKm} km` });
+      });
+  })
+  .catch((err) => {
+    if (err.json && err.json.status) {
+      console.log(err.json.status);
+      if (err.json.status === 'NOT_FOUND') {
+        res.send({ link: '', timeDifference: '', distanceSaved: '' });
       }
-    });
+    } else {
+      console.log('Error:', err);
+    }
+  });
   /* googleMapsClient.directions({origin: origin, destination: destination, waypoints:waypts, optimize:true, mode: "driving"})
       .asPromise()
       .then((response) => {
@@ -163,8 +165,14 @@ app.post('/ol', (req, res) => {
 
 });
 
+
+// // starting the server
+// app.listen(3001, () => {
+//   console.log('listening on port 3001');
+// });
+
 app.listen(process.env.PORT, () => {
-  console.log('listening on port');
+  console.log('listening on port ' + process.env.PORT);
 });
 
 /**
