@@ -4,7 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyA0JImnEIWWiKcxMd2vgx1M5qK3jeRNd4c',
+  key: 'YOUR_API_KEY_HERE',
   Promise: Promise
 });
 
@@ -166,15 +166,15 @@ app.post('/ol', (req, res) => {
 });
 
 //localhost testing block (uncomment if doing local testing)
-// // starting the server
-// app.listen(3001, () => {
-//   console.log('listening on port 3001');
-// });
+// starting the server
+app.listen(3001, () => {
+  console.log('listening on port 3001');
+});
 
 //prod listen statement
-app.listen(process.env.PORT, () => {
-  console.log('listening on port ' + process.env.PORT);
-});
+// app.listen(process.env.PORT, () => {
+//   console.log('listening on port ' + process.env.PORT);
+// });
 
 /**
   directionsService.route(request, function(response, status) {
