@@ -84,15 +84,15 @@ app.post('/ol', (req, res) => {
           output.push(destination);
           let urlstr = output.join('_');
           urlstr = urlstr.replaceAll('_', '/');
+          urlstr = urlstr.replace(/[!'()*;:@&=$?%#\[\]]/g, function(c) {
+            return '%' + c.charCodeAt(0).toString(16);
+          });
           urlstr = "https://www.google.com/maps/dir/" + urlstr;
           const diffTimeInMinutes = preTimeInMinutes - postTimeInMinutes;
           const diffDistanceInMeters = preDistanceInMeters - postDistanceInMeters;
           const diffDistanceInKm = diffDistanceInMeters / 1000;
           const formattedTime = `${Math.floor(diffTimeInMinutes / 60)} hr ${Math.round(diffTimeInMinutes % 60)} min`;
           console.log("url " + urlstr)
-          urlstr = urlstr.replace(/[!'()*;:@&=$?%#\[\]]/g, function(c) {
-            return '%' + c.charCodeAt(0).toString(16);
-          });
           res.send({ link: urlstr, timeDifference: formattedTime, distanceSaved: `${diffDistanceInKm} km` });
         });
     })
