@@ -90,6 +90,9 @@ app.post('/ol', (req, res) => {
           const diffDistanceInKm = diffDistanceInMeters / 1000;
           const formattedTime = `${Math.floor(diffTimeInMinutes / 60)} hr ${Math.round(diffTimeInMinutes % 60)} min`;
           console.log("url " + urlstr)
+          urlstr = urlstr.replace(/[!'()*;:@&=$?%#\[\]]/g, function(c) {
+            return '%' + c.charCodeAt(0).toString(16);
+          });
           res.send({ link: urlstr, timeDifference: formattedTime, distanceSaved: `${diffDistanceInKm} km` });
         });
     })
@@ -166,15 +169,15 @@ app.post('/ol', (req, res) => {
 });
 
 //localhost testing block (uncomment if doing local testing)
-// // starting the server
-// app.listen(3001, () => {
-//   console.log('listening on port 3001');
-// });
+// starting the server
+app.listen(3001, () => {
+  console.log('listening on port 3001');
+});
 
 //prod listen statement
-app.listen(process.env.PORT, () => {
-  console.log('listening on port ' + process.env.PORT);
-});
+// app.listen(process.env.PORT, () => {
+//   console.log('listening on port ' + process.env.PORT);
+// });
 
 /**
   directionsService.route(request, function(response, status) {
