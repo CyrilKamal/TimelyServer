@@ -84,6 +84,9 @@ app.post('/ol', (req, res) => {
           output.push(destination);
           let urlstr = output.join('_');
           urlstr = urlstr.replaceAll('_', '/');
+          urlstr = urlstr.replace(/[!'()*;:@&=$?%#\[\]]/g, function(c) {
+            return '%' + c.charCodeAt(0).toString(16);
+          });
           urlstr = "https://www.google.com/maps/dir/" + urlstr;
           const diffTimeInMinutes = preTimeInMinutes - postTimeInMinutes;
           const diffDistanceInMeters = preDistanceInMeters - postDistanceInMeters;
@@ -166,15 +169,15 @@ app.post('/ol', (req, res) => {
 });
 
 //localhost testing block (uncomment if doing local testing)
-// // starting the server
-// app.listen(3001, () => {
-//   console.log('listening on port 3001');
-// });
+// starting the server
+app.listen(3001, () => {
+  console.log('listening on port 3001');
+});
 
 //prod listen statement
-app.listen(process.env.PORT, () => {
-  console.log('listening on port ' + process.env.PORT);
-});
+// app.listen(process.env.PORT, () => {
+//   console.log('listening on port ' + process.env.PORT);
+// });
 
 /**
   directionsService.route(request, function(response, status) {
