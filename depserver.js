@@ -4,7 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const googleMapsClient = require('@google/maps').createClient({
-  key: 'AIzaSyA0JImnEIWWiKcxMd2vgx1M5qK3jeRNd4c',
+  key: 'AIzaSyDs2AicXiqugqpo-Yx-vVIVCqXq-5l3Gnw',
   Promise: Promise
 });
 
